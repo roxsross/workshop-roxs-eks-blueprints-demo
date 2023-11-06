@@ -35,7 +35,7 @@ jobs:
       with:
         push: true
         platforms: linux/amd64,linux/arm64
-        tags: roxsross12/eks_bp_demo:${{ steps.prep.outputs.VERSION }}, roxsross12/eks_bp_demo:${{ steps.prep.outputs.BUILD_DATE }}
+        tags: roxsross12/roxs_eks_bp_demo:${{ steps.prep.outputs.VERSION }}, roxsross12/eks_bp_demo:${{ steps.prep.outputs.BUILD_DATE }}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
