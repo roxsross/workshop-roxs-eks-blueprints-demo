@@ -15,16 +15,15 @@ jobs:
       id: prep
       run: |
           VERSION=${GITHUB_SHA::8}
-          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H-%M-%SZ')
           echo ::set-output name=VERSION::${VERSION}
     - name: Check Out Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
@@ -34,8 +33,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        platforms: linux/amd64,linux/arm64
-        tags: roxsross12/roxs_eks_bp_demo:${{ steps.prep.outputs.VERSION }}, roxsross12/eks_bp_demo:${{ steps.prep.outputs.BUILD_DATE }}
+        tags: roxsross12/${{ github.event.repository.name }}:${{ steps.prep.outputs.VERSION }}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
