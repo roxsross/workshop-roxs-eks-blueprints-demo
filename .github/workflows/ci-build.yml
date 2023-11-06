@@ -10,12 +10,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    steps:
-    - name: Preparation
-      id: prep
-      run: |
-          VERSION=${GITHUB_SHA::8}
-          echo ::set-output name=VERSION::${VERSION}
+    steps:   
     - name: Check Out Repo
       uses: actions/checkout@v3
 
@@ -27,13 +22,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-
     - name: Build and push
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: roxsross12/${{ github.event.repository.name }}:${{ steps.prep.outputs.VERSION }}
-
-    - name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
+      env:
+        REGISTRY: roxsross12
+        REPOSITORY: ${{ github.event.repository.name }}
+      run: |
+        VERSION=`jq -r '.version' ./package.json`
+        docker build -t $REGISTRY/$REPOSITORY:$VERSION .
+        docker push $REGISTRY/$REPOSITORY:$VERSION
