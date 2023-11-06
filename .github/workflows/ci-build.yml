@@ -27,6 +27,6 @@ jobs:
         REGISTRY: roxsross12
         REPOSITORY: ${{ github.event.repository.name }}
       run: |
-        VERSION=`jq -r '.version' ./package.json`
+        VERSION=${GITHUB_SHA::8}
         docker build -t $REGISTRY/$REPOSITORY:$VERSION .
         docker push $REGISTRY/$REPOSITORY:$VERSION
